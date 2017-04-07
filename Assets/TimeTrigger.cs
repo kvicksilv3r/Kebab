@@ -41,12 +41,19 @@ public class TimeTrigger : MonoBehaviour
 		PlayerState p = new PlayerState();
 		bool[] playerBools = new bool[3];
 		p.Pos = transform.position;
-		p.Rot = transform.rotation;
-		p.Vel = player.Velocity();
+		p.Rot = player.Child().rotation;
+		p.Vel = player.VecVelocity()[0];
+		p.RBodyVel = player.VecVelocity()[1];
 		playerBools = player.JumpStates();
 		p.OnGround = playerBools[0];
 		p.IsJumping = playerBools[1];
 		p.DoubleJump = playerBools[2];
+
+		p.XVelCur = player.Velocities()[0];
+		p.XVelGoal = player.Velocities()[1];
+		p.ZVelCur = player.Velocities()[2];
+		p.ZVelGoal = player.Velocities()[3];
+
 		playerStates.Add(p);
 		//print(PosRots.Count);
 	}

@@ -7,11 +7,17 @@ public class PlayerState
 
 	Vector3 pos;
 	Vector3 vel;
+	Vector3 rBodyVel;
 	Quaternion rot;
 	bool isJumping;
 	bool doubleJump;
 	bool onGround;
+	float xVelGoal;
+	float zVelGoal;
+	float xVelCur;
+	float zVelCur;
 
+	float[] floatVelocities = new float[4];
 
 	public Vector3 Pos
 	{
@@ -29,6 +35,13 @@ public class PlayerState
 	{
 		get { return vel; }
 		set { vel = value; }
+	}
+
+
+	public Vector3 RBodyVel
+	{
+		get { return rBodyVel; }
+		set { rBodyVel = value; }
 	}
 
 	public bool DoubleJump
@@ -49,5 +62,28 @@ public class PlayerState
 		set { onGround = value; }
 	}
 
+	public float XVelGoal
+	{
+		get { return xVelGoal; }
+		set { xVelGoal = value; }
+	}
+
+	public float ZVelGoal
+	{
+		get { return zVelGoal; }
+		set { zVelGoal = value; }
+	}
+
+	public float XVelCur
+	{
+		get { return xVelCur; }
+		set { xVelCur = value; }
+	}
+
+	public float ZVelCur
+	{
+		get { return zVelCur; }
+		set { zVelCur = value; }
+	}
 
 }

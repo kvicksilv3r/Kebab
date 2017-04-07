@@ -12,6 +12,8 @@ public class PlayerScript : MonoBehaviour
 	float horizontalAxis, verticalAxis;
 	protected Vector3 velocity;
 
+	protected Transform child;
+
 	protected TimeTrigger timeTrigger;
 
 	float lastX, lastZ;
@@ -37,6 +39,7 @@ public class PlayerScript : MonoBehaviour
 		timeTrigger = GetComponent<TimeTrigger>();
 
 		groundRay = new Ray(transform.position, Vector3.down);
+		child = transform.FindChild("PlayerBoy");
 	}
 
 	// Update is called once per frame
@@ -50,10 +53,11 @@ public class PlayerScript : MonoBehaviour
 			timeTrigger.ReverseTime();
 			StopVelocity();
 		}
-		else if (Input.GetButton("Reversal"))
-		{
-			//Ayylmao
-		}
+
+		//else if (Input.GetButton("Reversal"))
+		//{
+		//	//Ayylmao
+		//}
 
 		else
 		{
@@ -104,11 +108,12 @@ public class PlayerScript : MonoBehaviour
 			fallVelocity = rBody.velocity.y;
 			rBody.velocity = this.velocity + new Vector3(0, fallVelocity, 0);
 
-			if (Input.GetButtonUp("Reversal"))
-			{
-				timeTrigger.StopReversal();
-				EnableVelocity();
-			}
+		}
+
+		if (Input.GetButtonUp("Reversal"))
+		{
+			timeTrigger.StopReversal();
+			EnableVelocity();
 		}
 
 		#endregion
@@ -118,7 +123,7 @@ public class PlayerScript : MonoBehaviour
 		groundRay.origin = transform.position;
 		if (rBody.velocity.y < 1)
 		{
-			if (Physics.Raycast(groundRay, out groundHit, GetComponent<Renderer>().bounds.size.y / 2 + 0.1f))
+			if (Physics.Raycast(groundRay, out groundHit, child.GetComponent<Renderer>().bounds.size.y / 2 + 0.1f))
 			{
 				onGround = true;
 				airTime = maxAirTime;
@@ -131,23 +136,17 @@ public class PlayerScript : MonoBehaviour
 			}
 		}
 
-		if (onGround && Input.GetButtonDown("Submit"))
+		if (onGround && Input.GetButtonDown("Jump"))
 		{
 			Jump();
 			print("Jump");
 		}
 
-		else if (isJumping && !doubleJump && Input.GetButtonDown("Submit"))
+		else if (!onGround && !doubleJump && Input.GetButtonDown("Jump"))
 		{
 			Jump();
 			print("DoubleJump");
 		}
-
-		Debug.DrawRay(transform.position, Vector3.down * (GetComponent<Renderer>().bounds.size.y / 2 + 0.1f), Color.red);
-
-		Debug.DrawRay(transform.position, Vector3.right * (GetComponent<Renderer>().bounds.size.x / 2 + 0.1f), Color.cyan);
-
-		Debug.DrawRay(transform.position, Vector3.left * (GetComponent<Renderer>().bounds.size.x / 2 + 0.1f), Color.yellow);
 
 		#endregion
 
@@ -181,12 +180,11 @@ public class PlayerScript : MonoBehaviour
 		rBody.AddForce(Vector3.up * extendedJumpForce, ForceMode.Force);
 	}
 
-	public Vector3 Velocity()
+	public Vector3[] VecVelocity()
 	{
-		return velocity;
+		Vector3[] returnVec = new Vector3[2] { velocity, rBody.velocity };
+		return returnVec;
 	}
-
-	//return goal vels
 
 	void EnableVelocity()
 	{
@@ -214,11 +212,16 @@ public class PlayerScript : MonoBehaviour
 		transform.position = p.Pos;
 		velocity = p.Vel;
 		rBody.velocity = Vector3.zero;
-		rBody.rotation = p.Rot;
+		child.rotation = p.Rot;
 
 		onGround = p.OnGround;
 		isJumping = p.IsJumping;
 		doubleJump = p.DoubleJump;
+
+		xVelCur = p.XVelCur;
+		xVelGoal = p.XVelGoal;
+		zVelCur = p.ZVelGoal;
+		zVelGoal = p.ZVelGoal;
 
 	}
 
@@ -227,5 +230,16 @@ public class PlayerScript : MonoBehaviour
 		bool[] returnBools = new bool[] { onGround, isJumping, doubleJump };
 
 		return returnBools;
+	}
+
+	public float[] Velocities()
+	{
+		float[] returnVels = new float[4] { xVelCur, xVelGoal, zVelCur, zVelGoal };
+		return returnVels;
+	}
+
+	public Transform Child()
+	{
+		return child;
 	}
 }
