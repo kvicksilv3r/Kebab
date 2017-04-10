@@ -40,12 +40,12 @@ public class PlayerScript : MonoBehaviour
 
 		groundRay = new Ray(transform.position, Vector3.down);
 		child = transform.FindChild("PlayerBoy");
+
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-
 		#region Movement
 
 		if (Input.GetButton("Reversal") && timeTrigger.CanReverse())
@@ -59,56 +59,56 @@ public class PlayerScript : MonoBehaviour
 		//	//Ayylmao
 		//}
 
-		else
-		{
-			if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0)
-			{
-				horizontalAxis = Input.GetAxis("Horizontal");
-				lastX = horizontalAxis;
-			}
-			else
-			{
-				horizontalAxis = 0;
-			}
+		//else
+		//{
+		//	if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0)
+		//	{
+		//		horizontalAxis = Input.GetAxis("Horizontal");
+		//		lastX = horizontalAxis;
+		//	}
+		//	else
+		//	{
+		//		horizontalAxis = 0;
+		//	}
 
-			if (Mathf.Abs(Input.GetAxis("Vertical")) > 0)
-			{
-				verticalAxis = Input.GetAxis("Vertical");
-				lastZ = verticalAxis;
-			}
-			else
-			{
-				verticalAxis = 0;
-			}
+		//	if (Mathf.Abs(Input.GetAxis("Vertical")) > 0)
+		//	{
+		//		verticalAxis = Input.GetAxis("Vertical");
+		//		lastZ = verticalAxis;
+		//	}
+		//	else
+		//	{
+		//		verticalAxis = 0;
+		//	}
 
-			zVelGoal = Mathf.Lerp(zVelGoal, verticalAxis * axisMulti, goalAcceleration);
-			xVelGoal = Mathf.Lerp(xVelGoal, horizontalAxis * axisMulti, goalAcceleration);
+		//	zVelGoal = Mathf.Lerp(zVelGoal, verticalAxis * axisMulti, goalAcceleration);
+		//	xVelGoal = Mathf.Lerp(xVelGoal, horizontalAxis * axisMulti, goalAcceleration);
 
-			if (Mathf.Abs(zVelGoal) > 0.01f)
-			{
-				zVelCur = Mathf.Lerp(zVelCur, zVelGoal, acceleration);
-			}
-			else
-			{
-				zVelCur = 0;
-			}
+		//	if (Mathf.Abs(zVelGoal) > 0.01f)
+		//	{
+		//		zVelCur = Mathf.Lerp(zVelCur, zVelGoal, acceleration);
+		//	}
+		//	else
+		//	{
+		//		zVelCur = 0;
+		//	}
 
-			if (Mathf.Abs(xVelGoal) > 0.01f)
-			{
-				xVelCur = Mathf.Lerp(xVelCur, xVelGoal, acceleration);
-			}
-			else
-			{
-				xVelCur = 0;
-			}
+		//	if (Mathf.Abs(xVelGoal) > 0.01f)
+		//	{
+		//		xVelCur = Mathf.Lerp(xVelCur, xVelGoal, acceleration);
+		//	}
+		//	else
+		//	{
+		//		xVelCur = 0;
+		//	}
 
-			velocity.x = xVelCur;
-			velocity.z = zVelCur;
+		//	velocity.x = xVelCur;
+		//	velocity.z = zVelCur;
 
-			fallVelocity = rBody.velocity.y;
-			rBody.velocity = this.velocity + new Vector3(0, fallVelocity, 0);
+		//	fallVelocity = rBody.velocity.y;
+		//	rBody.velocity = this.velocity + new Vector3(0, fallVelocity, 0);
 
-		}
+		//}
 
 		if (Input.GetButtonUp("Reversal"))
 		{
@@ -197,6 +197,11 @@ public class PlayerScript : MonoBehaviour
 		velocity = IncomingVelocity;
 		rBody.velocity = velocity;
 		rBody.useGravity = true;
+	}
+
+	public void Move(float vertical, float horizontal)
+	{
+		rBody.velocity = new Vector3(horizontalAxis, 0, vertical);
 	}
 
 	void StopVelocity()

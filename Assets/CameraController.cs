@@ -7,9 +7,15 @@ public class CameraController : MonoBehaviour
 
 	[SerializeField]
 	protected float maxVerticalSpeed, maxHorizontalSpeed;
+
+	[SerializeField]
+	bool horInvert, vertInvert;
+
+	int horInv = 1, vertInv = 1;
+
 	protected float slowDown;
 
-	protected Transform parent;
+	protected Transform target;
 
 	protected float inpactOffset;
 
@@ -19,17 +25,31 @@ public class CameraController : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		parent = transform.parent;
+		target = transform.parent;
+
+		if (horInvert)
+			horInv *= -1;
+
+		if (vertInvert)
+			vertInv *= -1;
 	}
 
-	// Update is called once per frame
-	void Update()
+	public void HorizontalMovement(float inputValue)
 	{
-		//float translation = Input.GetAxis("VerticalR");
-		//float rotation = Input.GetAxis("HorizontalR");
-
-		//transform.RotateAround(parent.position, new Vector3(rotation,0,0), maxHorizontalSpeed * Time.deltaTime);
-		//transform.RotateAround(parent.position, new Vector3(0, translation, 0), maxVerticalSpeed * Time.deltaTime);
-
+		transform.RotateAround(target.position, Vector3.up, -inputValue * maxHorizontalSpeed * Time.deltaTime);
+		print(-inputValue);
 	}
+
+	public void VerticalMovement(float inputValue)
+	{
+		transform.RotateAround(target.position, transform.TransformDirection(Vector3.right), maxVerticalSpeed * inputValue * Time.deltaTime);
+	}
+
+	public void CameraRotation(float horizontal, float vertical)
+	{
+		transform.RotateAround(target.position, Vector3.up, horInv * horizontal * maxHorizontalSpeed * Time.deltaTime);
+		transform.RotateAround(target.position, transform.TransformDirection(Vector3.right), vertInv * vertical * maxVerticalSpeed * Time.deltaTime);
+	}
+
+
 }
