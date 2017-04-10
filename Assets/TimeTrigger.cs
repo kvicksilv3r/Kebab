@@ -13,7 +13,7 @@ public class TimeTrigger : MonoBehaviour
 	void Start()
 	{
 		InvokeRecord();
-		player = GetComponent<PlayerScript>();
+		player = transform.root.GetComponent<PlayerScript>();
 	}
 
 	public bool CanReverse()
@@ -40,7 +40,7 @@ public class TimeTrigger : MonoBehaviour
 
 		PlayerState p = new PlayerState();
 		bool[] playerBools = new bool[3];
-		p.Pos = transform.position;
+		p.Pos = player.transform.position;
 		p.Rot = player.Child().rotation;
 		p.Vel = player.VecVelocity()[0];
 		p.RBodyVel = player.VecVelocity()[1];
@@ -61,6 +61,7 @@ public class TimeTrigger : MonoBehaviour
 	public void StopReversal()
 	{
 		reversing = false;
+		player.EnableVelocity();
 		CancelInvoke("Reversal");
 		//PosRots.Clear();
 		InvokeRecord();

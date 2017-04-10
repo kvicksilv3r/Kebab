@@ -10,7 +10,8 @@ public class PlayerScript : MonoBehaviour
 	float deadZone = 0.19f;
 	public float xVelCur, zVelCur, xVelGoal, zVelGoal;
 	float horizontalAxis, verticalAxis;
-	protected Vector3 velocity;
+	public Vector3 velocity;
+	protected Vector3 velocityGoal;
 
 	protected Transform child;
 
@@ -38,6 +39,8 @@ public class PlayerScript : MonoBehaviour
 		rBody = GetComponent<Rigidbody>();
 		timeTrigger = GetComponent<TimeTrigger>();
 
+		velocityGoal = Vector3.zero;
+
 		groundRay = new Ray(transform.position, Vector3.down);
 		child = transform.FindChild("PlayerBoy");
 
@@ -46,81 +49,11 @@ public class PlayerScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		#region Movement
-
-		if (Input.GetButton("Reversal") && timeTrigger.CanReverse())
-		{
-			timeTrigger.ReverseTime();
-			StopVelocity();
-		}
-
-		//else if (Input.GetButton("Reversal"))
-		//{
-		//	//Ayylmao
-		//}
-
-		//else
-		//{
-		//	if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0)
-		//	{
-		//		horizontalAxis = Input.GetAxis("Horizontal");
-		//		lastX = horizontalAxis;
-		//	}
-		//	else
-		//	{
-		//		horizontalAxis = 0;
-		//	}
-
-		//	if (Mathf.Abs(Input.GetAxis("Vertical")) > 0)
-		//	{
-		//		verticalAxis = Input.GetAxis("Vertical");
-		//		lastZ = verticalAxis;
-		//	}
-		//	else
-		//	{
-		//		verticalAxis = 0;
-		//	}
-
-		//	zVelGoal = Mathf.Lerp(zVelGoal, verticalAxis * axisMulti, goalAcceleration);
-		//	xVelGoal = Mathf.Lerp(xVelGoal, horizontalAxis * axisMulti, goalAcceleration);
-
-		//	if (Mathf.Abs(zVelGoal) > 0.01f)
-		//	{
-		//		zVelCur = Mathf.Lerp(zVelCur, zVelGoal, acceleration);
-		//	}
-		//	else
-		//	{
-		//		zVelCur = 0;
-		//	}
-
-		//	if (Mathf.Abs(xVelGoal) > 0.01f)
-		//	{
-		//		xVelCur = Mathf.Lerp(xVelCur, xVelGoal, acceleration);
-		//	}
-		//	else
-		//	{
-		//		xVelCur = 0;
-		//	}
-
-		//	velocity.x = xVelCur;
-		//	velocity.z = zVelCur;
-
-		//	fallVelocity = rBody.velocity.y;
-		//	rBody.velocity = this.velocity + new Vector3(0, fallVelocity, 0);
-
-		//}
-
-		if (Input.GetButtonUp("Reversal"))
-		{
-			timeTrigger.StopReversal();
-			EnableVelocity();
-		}
-
-		#endregion
 
 		#region JumpStuff
 
 		groundRay.origin = transform.position;
+
 		if (rBody.velocity.y < 1)
 		{
 			if (Physics.Raycast(groundRay, out groundHit, child.GetComponent<Renderer>().bounds.size.y / 2 + 0.1f))
@@ -150,11 +83,6 @@ public class PlayerScript : MonoBehaviour
 
 		#endregion
 
-		#region WallJumpStuff
-
-
-
-		#endregion
 	}
 
 	void Jump()
@@ -186,7 +114,7 @@ public class PlayerScript : MonoBehaviour
 		return returnVec;
 	}
 
-	void EnableVelocity()
+	public void EnableVelocity()
 	{
 		rBody.useGravity = true;
 		rBody.velocity = velocity;
@@ -199,12 +127,13 @@ public class PlayerScript : MonoBehaviour
 		rBody.useGravity = true;
 	}
 
-	public void Move(float vertical, float horizontal)
+	public void Move(Vector3 inputVelocity)
 	{
-		rBody.velocity = new Vector3(horizontalAxis, 0, vertical);
+		fallVelocity = rBody.velocity.y;
+		rBody.velocity = inputVelocity + new Vector3(0, fallVelocity, 0);
 	}
 
-	void StopVelocity()
+	public void StopVelocity()
 	{
 		velocity = Vector3.zero;
 		rBody.velocity = velocity;
