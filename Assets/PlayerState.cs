@@ -16,6 +16,7 @@ public class PlayerState
 	float zVelGoal;
 	float xVelCur;
 	float zVelCur;
+	AnimationState animState;
 
 	float[] floatVelocities = new float[4];
 
@@ -84,6 +85,12 @@ public class PlayerState
 	{
 		get { return zVelCur; }
 		set { zVelCur = value; }
+	}
+
+	public AnimationState AnimState
+	{
+		get { return animState; }
+		set { animState = value; }
 	}
 
 }

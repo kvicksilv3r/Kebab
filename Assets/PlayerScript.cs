@@ -13,7 +13,8 @@ public class PlayerScript : MonoBehaviour
 	public Vector3 velocity;
 	protected Vector3 velocityGoal;
 
-	protected Transform child;
+	protected Transform mummy;
+	public LayerMask mask;
 
 	protected TimeTrigger timeTrigger;
 
@@ -42,7 +43,7 @@ public class PlayerScript : MonoBehaviour
 		velocityGoal = Vector3.zero;
 
 		groundRay = new Ray(transform.position, Vector3.down);
-		child = transform.FindChild("PlayerBoy");
+		mummy = transform.FindChild("Mummy_char");
 
 	}
 
@@ -52,41 +53,28 @@ public class PlayerScript : MonoBehaviour
 
 		#region JumpStuff
 
-		groundRay.origin = transform.position;
+		groundRay.origin = mummy.position;
 
-		if (rBody.velocity.y < 1)
+		//if (Physics.Raycast(groundRay, out groundHit, mummy.GetComponent<CapsuleCollider>().height / 2 + 0.05f))
+		if (Physics.Raycast(groundRay, out groundHit, mummy.GetComponent<CapsuleCollider>().height / 2 + 0.1f, mask))
 		{
-			if (Physics.Raycast(groundRay, out groundHit, child.GetComponent<Renderer>().bounds.size.y / 2 + 0.1f))
-			{
-				onGround = true;
-				airTime = maxAirTime;
-				isJumping = false;
-				doubleJump = false;
-			}
-			else
-			{
-				onGround = false;
-			}
+			onGround = true;
+			isJumping = false;
+			doubleJump = false;
+			//print(groundHit.transform.name);
 		}
-
-		if (onGround && Input.GetButtonDown("Jump"))
+		else
 		{
-			Jump();
-			print("Jump");
-		}
-
-		else if (!onGround && !doubleJump && Input.GetButtonDown("Jump"))
-		{
-			Jump();
-			print("DoubleJump");
+			onGround = false;
 		}
 
 		#endregion
 
 	}
 
-	void Jump()
+	public void Jump()
 	{
+
 		if (isJumping)
 		{
 			doubleJump = true;
@@ -100,13 +88,14 @@ public class PlayerScript : MonoBehaviour
 
 		rBody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
 		onGround = false;
+
 	}
 
-	void ExtendedJump()
-	{
-		airTime -= Time.deltaTime;
-		rBody.AddForce(Vector3.up * extendedJumpForce, ForceMode.Force);
-	}
+	//void ExtendedJump()
+	//{
+	//	airTime -= Time.deltaTime;
+	//	rBody.AddForce(Vector3.up * extendedJumpForce, ForceMode.Force);
+	//}
 
 	public Vector3[] VecVelocity()
 	{
@@ -129,6 +118,7 @@ public class PlayerScript : MonoBehaviour
 
 	public void Move(Vector3 inputVelocity)
 	{
+		velocity = inputVelocity;
 		fallVelocity = rBody.velocity.y;
 		rBody.velocity = inputVelocity + new Vector3(0, fallVelocity, 0);
 	}
@@ -142,11 +132,10 @@ public class PlayerScript : MonoBehaviour
 
 	public void SetState(PlayerState p)
 	{
-		transform.rotation = p.Rot;
 		transform.position = p.Pos;
 		velocity = p.Vel;
 		rBody.velocity = Vector3.zero;
-		child.rotation = p.Rot;
+		mummy.rotation = p.Rot;
 
 		onGround = p.OnGround;
 		isJumping = p.IsJumping;
@@ -172,8 +161,9 @@ public class PlayerScript : MonoBehaviour
 		return returnVels;
 	}
 
-	public Transform Child()
+	public Transform Mummy()
 	{
-		return child;
+		return mummy;
 	}
+
 }

@@ -7,6 +7,7 @@ public class TimeTrigger : MonoBehaviour
 
 	public List<PlayerState> playerStates = new List<PlayerState>();
 	PlayerScript player;
+	GameObject mummyRig;
 	bool reversing = false;
 
 	// Use this for initialization
@@ -14,6 +15,7 @@ public class TimeTrigger : MonoBehaviour
 	{
 		InvokeRecord();
 		player = transform.root.GetComponent<PlayerScript>();
+		mummyRig = GameObject.Find("mummy_rig");
 	}
 
 	public bool CanReverse()
@@ -41,7 +43,7 @@ public class TimeTrigger : MonoBehaviour
 		PlayerState p = new PlayerState();
 		bool[] playerBools = new bool[3];
 		p.Pos = player.transform.position;
-		p.Rot = player.Child().rotation;
+		p.Rot = player.Mummy().rotation;
 		p.Vel = player.VecVelocity()[0];
 		p.RBodyVel = player.VecVelocity()[1];
 		playerBools = player.JumpStates();
