@@ -12,10 +12,6 @@ public class PlayerState
 	bool isJumping;
 	bool doubleJump;
 	bool onGround;
-	float xVelGoal;
-	float zVelGoal;
-	float xVelCur;
-	float zVelCur;
 	AnimationState animState;
 
 	float[] floatVelocities = new float[4];
@@ -61,30 +57,6 @@ public class PlayerState
 	{
 		get { return onGround; }
 		set { onGround = value; }
-	}
-
-	public float XVelGoal
-	{
-		get { return xVelGoal; }
-		set { xVelGoal = value; }
-	}
-
-	public float ZVelGoal
-	{
-		get { return zVelGoal; }
-		set { zVelGoal = value; }
-	}
-
-	public float XVelCur
-	{
-		get { return xVelCur; }
-		set { xVelCur = value; }
-	}
-
-	public float ZVelCur
-	{
-		get { return zVelCur; }
-		set { zVelCur = value; }
 	}
 
 	public AnimationState AnimState

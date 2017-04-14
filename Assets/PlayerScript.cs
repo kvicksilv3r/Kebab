@@ -8,8 +8,6 @@ public class PlayerScript : MonoBehaviour
 	Rigidbody rBody;
 
 	float deadZone = 0.19f;
-	public float xVelCur, zVelCur, xVelGoal, zVelGoal;
-	float horizontalAxis, verticalAxis;
 	public Vector3 velocity;
 	protected Vector3 velocityGoal;
 
@@ -17,9 +15,6 @@ public class PlayerScript : MonoBehaviour
 	public LayerMask mask;
 
 	protected TimeTrigger timeTrigger;
-
-	float lastX, lastZ;
-
 	float fallVelocity;
 
 	//Jumpstuff
@@ -29,10 +24,6 @@ public class PlayerScript : MonoBehaviour
 
 	[SerializeField]
 	protected float jumpForce, airTime, maxAirTime, extendedJumpForce;
-
-
-	[SerializeField]
-	float axisMulti, acceleration, goalAcceleration, rotationSpeed;
 
 	// Use this for initialization
 	void Start()
@@ -91,12 +82,6 @@ public class PlayerScript : MonoBehaviour
 
 	}
 
-	//void ExtendedJump()
-	//{
-	//	airTime -= Time.deltaTime;
-	//	rBody.AddForce(Vector3.up * extendedJumpForce, ForceMode.Force);
-	//}
-
 	public Vector3[] VecVelocity()
 	{
 		Vector3[] returnVec = new Vector3[2] { velocity, rBody.velocity };
@@ -140,12 +125,6 @@ public class PlayerScript : MonoBehaviour
 		onGround = p.OnGround;
 		isJumping = p.IsJumping;
 		doubleJump = p.DoubleJump;
-
-		xVelCur = p.XVelCur;
-		xVelGoal = p.XVelGoal;
-		zVelCur = p.ZVelGoal;
-		zVelGoal = p.ZVelGoal;
-
 	}
 
 	public bool[] JumpStates()
@@ -154,16 +133,18 @@ public class PlayerScript : MonoBehaviour
 
 		return returnBools;
 	}
-
-	public float[] Velocities()
-	{
-		float[] returnVels = new float[4] { xVelCur, xVelGoal, zVelCur, zVelGoal };
-		return returnVels;
-	}
-
 	public Transform Mummy()
 	{
 		return mummy;
+	}
+
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.tag == "Food")
+		{
+			print("nom");
+			other.transform.gameObject.SetActive(false);
+		}
 	}
 
 }

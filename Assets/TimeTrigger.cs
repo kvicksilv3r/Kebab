@@ -50,12 +50,6 @@ public class TimeTrigger : MonoBehaviour
 		p.OnGround = playerBools[0];
 		p.IsJumping = playerBools[1];
 		p.DoubleJump = playerBools[2];
-
-		p.XVelCur = player.Velocities()[0];
-		p.XVelGoal = player.Velocities()[1];
-		p.ZVelCur = player.Velocities()[2];
-		p.ZVelGoal = player.Velocities()[3];
-
 		playerStates.Add(p);
 		//print(PosRots.Count);
 	}
@@ -65,7 +59,6 @@ public class TimeTrigger : MonoBehaviour
 		reversing = false;
 		player.EnableVelocity();
 		CancelInvoke("Reversal");
-		//PosRots.Clear();
 		InvokeRecord();
 	}
 
